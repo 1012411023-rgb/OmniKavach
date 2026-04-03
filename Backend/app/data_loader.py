@@ -53,8 +53,8 @@ def _validate_timestamp(timestamp_raw, context: str = "data") -> datetime:
         if pd.isna(timestamp):
             raise ValueError(f"Could not parse timestamp in {context}: {timestamp_raw}")
         
-        # Validate reasonable date range (1900-2100)
-        if timestamp.year < 1900 or timestamp.year > 2100:
+        # Validate reasonable date range (1900-2200 to handle MIMIC obfuscated dates)
+        if timestamp.year < 1900 or timestamp.year > 2200:
             raise ValueError(f"Timestamp out of reasonable range in {context}: {timestamp}")
             
         return timestamp.to_pydatetime()

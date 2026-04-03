@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 class AIAgent:
     """Base class for AI agents using Groq."""
     
-    def __init__(self, model_name: str = "llama3-8b-8192"):
+    def __init__(self, model_name: str = "llama-3.1-8b-instant"):
         """Initialize the AI agent with Groq client."""
         api_key = os.getenv("GROQ_API_KEY")
         if not api_key:
@@ -57,7 +57,7 @@ class AIAgent:
 class ParserAgent(AIAgent):
     """Agent responsible for extracting key symptoms from clinical notes."""
     
-    def __init__(self, model_name: str = "llama3-8b-8192"):
+    def __init__(self, model_name: str = "llama-3.1-8b-instant"):
         """Initialize the Parser Agent with mock clinical notes file."""
         super().__init__(model_name)
         self.mock_notes_file = Path(__file__).resolve().parent.parent / "mock_clinical_notes.txt"
@@ -125,7 +125,7 @@ Be concise and medically accurate. Include only clinically relevant findings."""
 class TrackerAgent(AIAgent):
     """Agent responsible for analyzing lab trends and detecting outliers."""
     
-    def __init__(self, model_name: str = "llama3-8b-8192"):
+    def __init__(self, model_name: str = "llama-3.1-8b-instant"):
         """Initialize the Tracker Agent."""
         super().__init__(model_name)
     
@@ -230,8 +230,8 @@ Be medically accurate and concise."""
 class ChiefSynthesisAgent(AIAgent):
     """Chief agent that synthesizes all data into final analysis report."""
     
-    def __init__(self, model_name: str = "llama3-70b-8192"):
-        """Initialize Chief Agent with more powerful model."""
+    def __init__(self, model_name: str = "llama-3.1-8b-instant"):
+        """Initialize Chief Agent with currently supported model."""
         super().__init__(model_name)
     
     async def generate_patient_report(self, patient_id: str, symptoms: List[str], 
