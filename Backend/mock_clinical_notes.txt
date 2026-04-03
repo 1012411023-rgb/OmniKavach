@@ -1,0 +1,39 @@
+ICU Nursing Shift Note - Patient P-101
+Date: Current Shift
+Time: 04:00
+
+SHIFT ASSESSMENT:
+Patient presents with concerning clinical picture requiring close monitoring. Noted to be lethargic with decreased responsiveness to verbal stimuli. Skin appears clammy and cool to touch, suggesting peripheral perfusion compromise. Respiratory effort increased with noted shortness of breath, rate 22 breaths/min with shallow pattern.
+
+VITAL SIGNS:
+- Heart Rate: 115 bpm (elevated)
+- Blood Pressure: 95/60 mmHg (hypotensive)
+- Respiratory Rate: 22/min (elevated)
+- Temperature: 38.4°C (febrile)
+- SpO2: 92% on room air (mild hypoxia)
+
+PHYSICAL FINDINGS:
+- General: Lethargic, clammy skin, poor skin turgor
+- Respiratory: Increased work of breathing, shallow breaths
+- Cardiovascular: Tachycardic, hypotensive
+- Neurological: Decreased responsiveness, GCS 12
+
+CLINICAL CONCERNS:
+1. Sepsis risk elevated - fever + tachycardia + hypotension
+2. Potential tissue hypoperfusion - clammy skin + altered mental status
+3. Respiratory compromise - increased work of breathing
+4. Need for urgent laboratory evaluation and potential sepsis workup
+
+RECOMMENDATIONS:
+- STAT lactate, blood cultures, CBC
+- Consider fluid resuscitation protocol
+- Continuous cardiac monitoring
+- Repeat vitals every 15 minutes
+- Prepare for potential ICU transfer
+
+NURSING ACTIONS:
+- Two peripheral IV attempts successful
+- Fluid bolus initiated per protocol
+- Blood cultures drawn prior to antibiotics
+- Lactate level pending
+- Continuous pulse oximetry applied
