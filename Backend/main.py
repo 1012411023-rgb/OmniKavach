@@ -76,6 +76,7 @@ def get_patients() -> list[int]:
 
 @app.get("/patients/{patient_id}", response_model=schemas.PatientData)
 def get_patient(patient_id: int = FastApiPath(..., ge=1, le=999999, description="MIMIC subject ID (must be positive integer)")) -> schemas.PatientData:
+    """Return full patient data loaded from MIMIC files for a specific subject."""
     logger.info("Requesting patient data for SUBJECT_ID: %s", patient_id)
     try:
         patient_data = get_mimic_patient(patient_id)
@@ -93,6 +94,7 @@ def get_patient(patient_id: int = FastApiPath(..., ge=1, le=999999, description=
 
 @app.post("/analyze/{patient_id}", response_model=schemas.AnalysisReport)
 async def analyze_patient(patient_id: int = FastApiPath(..., ge=1, le=999999, description="MIMIC subject ID (must be positive integer)")) -> schemas.AnalysisReport:
+    """Load MIMIC patient data and run the analysis engine."""
     logger.info("Risk Analysis requested for patient SUBJECT_ID: %s", patient_id)
 
     try:
@@ -106,7 +108,7 @@ async def analyze_patient(patient_id: int = FastApiPath(..., ge=1, le=999999, de
         raise ClinicalDataIncompleteError(f"Patient {patient_id} is missing vital signs or laboratory results")
 
     try:
-        # TIMEOUT FIXED TO 20
+        # TIMEOUT INCREASED TO 20 SECONDS
         analysis_result = await asyncio.wait_for(analyze_patient_data(patient_data), timeout=20)
         
         if analysis_result is None:
@@ -118,4 +120,5 @@ async def analyze_patient(patient_id: int = FastApiPath(..., ge=1, le=999999, de
         logger.error("AI analysis timed out after 20 seconds for patient %s", patient_id)
         raise AIProcessingTimeout(f"AI analysis timed out after 20 seconds for patient {patient_id}") from exc
     except Exception as exc:
+        logger.error("Analysis engine error for patient %s: %s", patient_id, str(exc), exc_info=True)
         raise HTTPException(status_code=500, detail=f"Analysis engine encountered an error for patient {patient_id}") from exc
