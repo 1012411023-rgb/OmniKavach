@@ -1,0 +1,10 @@
+ICU NURSING SHIFT NOTES - PATIENT P-101
+
+=== SHIFT 1: 07:00-15:00 ===
+Patient admitted from ED with suspected sepsis secondary to pneumonia. Initial vitals: HR 112, BP 85/50, Temp 38.4°C, RR 24, SpO2 91% on 2L NC. Patient appears lethargic but responsive to verbal stimuli. Skin is clammy and cool to touch. Reports shortness of breath with minimal exertion. Two peripheral IVs established, blood cultures drawn from both sites before antibiotic administration. Started on broad-spectrum antibiotics per sepsis protocol. Lactate result pending. Urine output 20mL/hr for past 2 hours. Family at bedside, appears anxious. Will continue close monitoring.
+
+=== SHIFT 2: 15:00-23:00 ===
+Patient condition worsening. Now increasingly lethargic, difficult to arouse. Respiratory distress increased, respiratory rate 28-32, using accessory muscles. Skin remains clammy with mottled appearance on lower extremities. New onset confusion noted - patient oriented to name only. BP trending down despite fluid resuscitation (now 75/40). Lactate returned at 4.8 mmol/L. Norepinephrine drip started at 5 mcg/min. Temperature now 39.1°C. Blood cultures show no growth yet. Urine output remains low at 15mL/hr. Continue aggressive fluid resuscitation, titrate vasopressors as needed. Critical care team notified of deterioration.
+
+=== SHIFT 3: 23:00-07:00 ===
+Patient critically ill, intubated at 02:30 for respiratory failure and decreased mental status. Currently sedated, ventilated on AC mode, FiO2 0.6. Norepinephrine increased to 15 mcg/min to maintain MAP >65. Vasopressin added at 0.03 units/min. Lactate now 6.2 mmol/L despite resuscitation efforts. Skin cool and mottled up to mid-thigh. Capillary refill >4 seconds. Urine output <10mL/hr for past 4 hours. Started on continuous renal replacement therapy for acute kidney injury and fluid overload. Family updated on critical condition. Antibiotics broadened to include antifungal coverage. Continue aggressive sepsis management, monitor for multi-organ dysfunction.
