@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 
 from app.schemas import PatientData, LabResult, VitalSign, ClinicalNote, AnalysisReport
 from app.tools import detect_lab_outlier, calculate_trend, validate_vital_sign_ranges
+from app.rag import retrieve_guideline
 
 # Load environment variables
 load_dotenv()
@@ -232,7 +233,6 @@ class ChiefSynthesisAgent(AIAgent):
     def __init__(self, model_name: str = "llama3-70b-8192"):
         """Initialize Chief Agent with more powerful model."""
         super().__init__(model_name)
-        self.guidelines_file = Path(__file__).resolve().parent.parent / "knowledge_base" / "sepsis_guidelines.md"
     
     async def generate_patient_report(self, patient_id: str, symptoms: List[str], 
                                     lab_analysis: Dict[str, Any]) -> AnalysisReport:
@@ -247,8 +247,9 @@ class ChiefSynthesisAgent(AIAgent):
         Returns:
             AnalysisReport matching exact Pydantic schema
         """
-        # Load sepsis guidelines
-        guidelines_text = self._load_sepsis_guidelines()
+        # Retrieve relevant guidelines using RAG based on symptoms
+        symptoms_query = "; ".join(symptoms) if symptoms else "sepsis assessment"
+        guidelines_text = await retrieve_guideline(symptoms_query)
         
         # Prepare data for analysis
         symptoms_text = "; ".join(symptoms) if symptoms else "No symptoms reported"
@@ -336,19 +337,6 @@ Generate comprehensive sepsis risk assessment."""
                 detected_anomalies=["Analysis unavailable"],
                 recommendations=["Immediate clinical assessment required"]
             )
-    
-    def _load_sepsis_guidelines(self) -> str:
-        """Load sepsis guidelines from knowledge base."""
-        try:
-            if self.guidelines_file.exists():
-                with open(self.guidelines_file, 'r', encoding='utf-8') as f:
-                    return f.read()
-            else:
-                logger.warning(f"Sepsis guidelines file not found: {self.guidelines_file}")
-                return "Surviving Sepsis Campaign: Measure lactate, obtain cultures, administer antibiotics, fluid resuscitation."
-        except Exception as exc:
-            logger.error(f"Failed to load sepsis guidelines: {exc}")
-            return "Standard sepsis protocols apply"
 
 
 async def generate_patient_report(patient_id: str, patient_data: PatientData) -> AnalysisReport:

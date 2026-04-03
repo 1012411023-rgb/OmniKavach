@@ -5,13 +5,13 @@ import logging
 from fastapi import FastAPI, HTTPException, Request, Path as FastApiPath
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from contextlib import asynccontextmanager
 
 from app import schemas
 from app.data_loader import get_available_subject_ids, get_mimic_patient
 from app.engine import analyze_patient_data
 from app.exceptions import AIProcessingTimeout, ClinicalDataIncompleteError
-
-app = FastAPI()
+from app.rag import initialize_vector_db, get_db_status
 
 # Configure logging
 LOG_FILE = Path(__file__).resolve().parent / "server_errors.log"
@@ -24,6 +24,35 @@ logging.basicConfig(
     ],
 )
 logger = logging.getLogger(__name__)
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Application lifespan manager with RAG initialization."""
+    logger.info("🚀 Starting OmniKavach Backend Server...")
+    
+    # Initialize ChromaDB vector database on startup
+    logger.info("📚 Initializing Medical Librarian (ChromaDB)...")
+    rag_initialized = initialize_vector_db()
+    
+    if rag_initialized:
+        db_status = get_db_status()
+        logger.info(f"✅ ChromaDB initialized successfully: {db_status}")
+    else:
+        logger.error("❌ ChromaDB initialization failed - RAG functionality unavailable")
+    
+    logger.info("🏥 OmniKavach Backend ready for ICU sepsis detection")
+    
+    yield
+    
+    # Cleanup on shutdown
+    logger.info("🛑 Shutting down OmniKavach Backend...")
+
+app = FastAPI(
+    title="OmniKavach ICU Sepsis Detection",
+    description="AI-powered sepsis risk assessment using multi-agent pipeline",
+    version="1.0.0",
+    lifespan=lifespan
+)
 
 app.add_middleware(
     CORSMiddleware,
