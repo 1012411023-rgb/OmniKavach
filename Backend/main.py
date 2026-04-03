@@ -85,7 +85,7 @@ async def generic_exception_handler(request: Request, exc: Exception) -> JSONRes
 
 @app.get("/patients", response_model=list[int])
 def get_patients() -> list[int]:
-    """Return available subject IDs from the MIMIC dataset."""
+    """Return available subject IDs from the MIMIC-III dataset."""
     try:
         return get_available_subject_ids()
     except ClinicalDataIncompleteError as exc:
@@ -104,7 +104,7 @@ def get_patients() -> list[int]:
 
 @app.get("/patients/{patient_id}", response_model=schemas.PatientData)
 def get_patient(patient_id: int = Path(..., ge=1, le=999999, description="MIMIC subject ID (must be positive integer)")) -> schemas.PatientData:
-    """Return full patient data loaded from MIMIC files for a specific subject."""
+    """Return full patient data loaded from MIMIC-III files for a specific subject."""
     logger.info("Requesting patient data for SUBJECT_ID: %s", patient_id)
     
     try:
@@ -140,7 +140,7 @@ def get_patient(patient_id: int = Path(..., ge=1, le=999999, description="MIMIC 
 
 @app.post("/analyze/{patient_id}", response_model=schemas.AnalysisReport)
 async def analyze_patient(patient_id: int = Path(..., ge=1, le=999999, description="MIMIC subject ID (must be positive integer)")) -> schemas.AnalysisReport:
-    """Load MIMIC patient data and run the analysis engine."""
+    """Analyze patient data using AI-powered sepsis risk assessment with hybrid data architecture."""
     logger.info("Risk Analysis requested for patient SUBJECT_ID: %s", patient_id)
 
     try:
@@ -166,7 +166,7 @@ async def analyze_patient(patient_id: int = Path(..., ge=1, le=999999, descripti
         )
 
     try:
-        analysis_result = await asyncio.wait_for(analyze_patient_data(patient_data), timeout=5)
+        analysis_result = await asyncio.wait_for(analyze_patient_data(patient_data), timeout=30)
         
         # Validate analysis result
         if analysis_result is None:
@@ -181,9 +181,9 @@ async def analyze_patient(patient_id: int = Path(..., ge=1, le=999999, descripti
         return analysis_result
         
     except asyncio.TimeoutError as exc:
-        logger.error("AI analysis timed out after 5 seconds for patient %s", patient_id)
+        logger.error("AI analysis timed out after 30 seconds for patient %s", patient_id)
         raise AIProcessingTimeout(
-            f"AI analysis timed out after 5 seconds for patient {patient_id}"
+            f"AI analysis timed out after 30 seconds for patient {patient_id}"
         ) from exc
     except Exception as exc:
         logger.error("Analysis engine error for patient %s: %s", patient_id, str(exc), exc_info=True)
