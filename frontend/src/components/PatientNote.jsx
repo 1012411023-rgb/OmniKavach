@@ -26,11 +26,11 @@ export default function PatientNote({ note, highlightedWords = [] }) {
   const roleStyle = ROLE_STYLES[note.role] ?? FALLBACK_ROLE;
 
   return (
-    <div className="bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700/50 rounded-xl p-4 hover:border-slate-300 dark:hover:border-slate-600/60 transition-colors animate-fade-in shadow-sm dark:shadow-none">
+    <div className="panel rounded-2xl p-4 hover:border-slate-300 dark:hover:border-slate-600/60 transition-colors animate-fade-in shadow-sm dark:shadow-none">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center flex-shrink-0">
+          <div className="w-8 h-8 rounded-2xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center flex-shrink-0">
             <User className="w-3.5 h-3.5 text-slate-400" />
           </div>
           <div>

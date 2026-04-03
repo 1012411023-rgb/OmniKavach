@@ -2,44 +2,42 @@ import { ShieldAlert, BookOpen, Bot, CheckCircle2, AlertTriangle, XCircle } from
 
 const SEVERITY = {
   critical: {
-    bar:  'bg-red-500',
+    bar: 'bg-red-500',
     text: 'text-red-600 dark:text-red-400',
-    bg:   'bg-red-50 dark:bg-red-500/10 border-red-200 dark:border-red-500/20',
+    bg: 'bg-red-50 dark:bg-red-500/10 border-red-200 dark:border-red-500/20',
   },
   warning: {
-    bar:  'bg-amber-500',
+    bar: 'bg-amber-500',
     text: 'text-amber-600 dark:text-amber-400',
-    bg:   'bg-amber-50 dark:bg-amber-500/10 border-amber-200 dark:border-amber-500/20',
+    bg: 'bg-amber-50 dark:bg-amber-500/10 border-amber-200 dark:border-amber-500/20',
   },
 };
 
 const SOURCE_COLORS = {
-  protocol:  'text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-500/10 border-cyan-200 dark:border-cyan-500/20',
-  dataset:   'text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-500/10 border-violet-200 dark:border-violet-500/20',
+  protocol: 'text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-500/10 border-cyan-200 dark:border-cyan-500/20',
+  dataset: 'text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-500/10 border-violet-200 dark:border-violet-500/20',
   guideline: 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/20',
 };
 
 const AGENT_ICONS = {
   complete: <CheckCircle2 className="w-3 h-3 text-emerald-500 dark:text-emerald-400" />,
-  flagged:  <AlertTriangle className="w-3 h-3 text-amber-500 dark:text-amber-400" />,
-  error:    <XCircle className="w-3 h-3 text-red-500 dark:text-red-400" />,
+  flagged: <AlertTriangle className="w-3 h-3 text-amber-500 dark:text-amber-400" />,
+  error: <XCircle className="w-3 h-3 text-red-500 dark:text-red-400" />,
 };
 
 export default function RiskReport({ synthesis, riskScore }) {
   if (!synthesis) return null;
 
   const riskColor = riskScore >= 75 ? 'text-red-600 dark:text-red-400' : riskScore >= 50 ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400';
-  const riskBar   = riskScore >= 75 ? 'bg-red-500'  : riskScore >= 50 ? 'bg-amber-500'  : 'bg-emerald-500';
+  const riskBar = riskScore >= 75 ? 'bg-red-500' : riskScore >= 50 ? 'bg-amber-500' : 'bg-emerald-500';
 
   return (
     <div className="space-y-4 animate-fade-in">
-
-      {/* Safety Caveat Banner */}
-      <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/40 rounded-xl p-3 flex gap-3 shadow-sm dark:shadow-none">
+      <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/40 rounded-2xl p-3 flex gap-3 shadow-sm dark:shadow-none">
         <ShieldAlert className="w-5 h-5 text-red-500 dark:text-red-400 flex-shrink-0 mt-0.5" />
         <div>
           <p className="text-red-600 dark:text-red-400 text-[11px] font-bold uppercase tracking-wider mb-0.5">
-            ⚠ Decision Support Only
+            Decision Support Only
           </p>
           <p className="text-red-500/70 dark:text-red-300/70 text-[10px] leading-relaxed">
             Not a clinical diagnosis. All AI-generated outputs must be reviewed and validated by a licensed
@@ -48,10 +46,9 @@ export default function RiskReport({ synthesis, riskScore }) {
         </div>
       </div>
 
-      {/* Risk Score */}
-      <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-xl p-4 shadow-sm dark:shadow-none">
+      <div className="panel rounded-2xl p-4 shadow-sm dark:shadow-none">
         <div className="flex items-center justify-between mb-2">
-          <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">AI Composite Risk Score</p>
+          <p className="section-label">AI Composite Risk Score</p>
           <span className={`text-2xl font-black font-mono ${riskColor}`}>{riskScore}%</span>
         </div>
         <div className="h-2 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
@@ -62,24 +59,22 @@ export default function RiskReport({ synthesis, riskScore }) {
         </div>
       </div>
 
-      {/* Chief Agent Synthesis */}
-      <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-xl p-4 shadow-sm dark:shadow-none">
+      <div className="panel rounded-2xl p-4 shadow-sm dark:shadow-none">
         <div className="flex items-center gap-2 mb-3">
           <Bot className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
-          <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Chief Agent Synthesis</p>
+          <p className="section-label">Chief Agent Synthesis</p>
         </div>
         <p className="text-slate-600 dark:text-slate-300 text-[11px] leading-relaxed">{synthesis.chiefSummary}</p>
       </div>
 
-      {/* Risk Factors */}
       {synthesis.riskFactors?.length > 0 && (
-        <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-xl p-4 shadow-sm dark:shadow-none">
-          <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3">Risk Factors Identified</p>
+        <div className="panel rounded-2xl p-4 shadow-sm dark:shadow-none">
+          <p className="section-label mb-3">Risk Factors Identified</p>
           <div className="space-y-2">
             {synthesis.riskFactors.map((rf, i) => {
               const s = SEVERITY[rf.severity];
               return (
-                <div key={i} className={`flex items-center gap-2.5 border rounded-lg px-3 py-2 ${s.bg}`}>
+                <div key={i} className={`flex items-center gap-2.5 border rounded-xl px-3 py-2 ${s.bg}`}>
                   <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${s.bar}`} />
                   <span className={`text-[11px] font-medium ${s.text}`}>{rf.label}</span>
                 </div>
@@ -89,12 +84,11 @@ export default function RiskReport({ synthesis, riskScore }) {
         </div>
       )}
 
-      {/* Guidelines Referenced */}
       {synthesis.guidelinesReferenced?.length > 0 && (
-        <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-xl p-4 shadow-sm dark:shadow-none">
+        <div className="panel rounded-2xl p-4 shadow-sm dark:shadow-none">
           <div className="flex items-center gap-2 mb-3">
             <BookOpen className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
-            <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Guidelines Referenced</p>
+            <p className="section-label">Guidelines Referenced</p>
             <span className="ml-auto text-[9px] text-blue-500 dark:text-cyan-500 font-mono">Medical RAG</span>
           </div>
           <div className="space-y-2">
@@ -116,10 +110,9 @@ export default function RiskReport({ synthesis, riskScore }) {
         </div>
       )}
 
-      {/* Agent Trace */}
       {synthesis.agentTrace?.length > 0 && (
-        <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-xl p-4 shadow-sm dark:shadow-none">
-          <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3">Agent Execution Trace</p>
+        <div className="panel rounded-2xl p-4 shadow-sm dark:shadow-none">
+          <p className="section-label mb-3">Agent Execution Trace</p>
           <div className="space-y-1.5">
             {synthesis.agentTrace.map((a, i) => (
               <div key={i} className="flex items-center gap-2.5">

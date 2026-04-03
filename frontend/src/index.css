@@ -5,13 +5,33 @@
 @tailwind utilities;
 
 @layer base {
-  html       { color-scheme: light; }
-  html.dark  { color-scheme: dark;  }
+  :root {
+    --app-bg: #f8fafc;
+    --app-bg-accent: rgba(14, 165, 233, 0.12);
+    --app-bg-warm: rgba(245, 158, 11, 0.1);
+    --panel-border: rgba(148, 163, 184, 0.18);
+    --panel-shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
+  }
+
+  html { color-scheme: light; }
+  html.dark {
+    color-scheme: dark;
+    --app-bg: #020617;
+    --app-bg-accent: rgba(34, 211, 238, 0.14);
+    --app-bg-warm: rgba(244, 63, 94, 0.1);
+    --panel-border: rgba(71, 85, 105, 0.45);
+    --panel-shadow: 0 24px 60px rgba(2, 6, 23, 0.5);
+  }
   html, body, #root { height: 100%; }
 
   body {
-    @apply bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-300 antialiased;
+    @apply text-slate-600 dark:text-slate-300 antialiased;
     font-family: 'Inter', system-ui, sans-serif;
+    background:
+      radial-gradient(circle at top left, var(--app-bg-accent), transparent 34%),
+      radial-gradient(circle at top right, var(--app-bg-warm), transparent 26%),
+      linear-gradient(180deg, rgba(255,255,255,0.7), rgba(248,250,252,0.92)),
+      var(--app-bg);
   }
 
   /* Smooth theme transition */
@@ -48,6 +68,27 @@
     @apply rounded-xl border
       bg-white dark:bg-slate-800
       border-slate-200 dark:border-slate-700/50;
+  }
+  .glass-panel {
+    background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,255,255,0.8));
+    border: 1px solid var(--panel-border);
+    box-shadow: var(--panel-shadow);
+    backdrop-filter: blur(18px);
+  }
+  .dark .glass-panel {
+    background: linear-gradient(180deg, rgba(15,23,42,0.9), rgba(15,23,42,0.72));
+  }
+  .dashboard-shell {
+    @apply relative overflow-hidden rounded-[28px] border border-white/60 dark:border-slate-700/40;
+    background: linear-gradient(180deg, rgba(255,255,255,0.72), rgba(255,255,255,0.52));
+    box-shadow: 0 28px 70px rgba(15, 23, 42, 0.12);
+  }
+  .dark .dashboard-shell {
+    background: linear-gradient(180deg, rgba(15,23,42,0.72), rgba(15,23,42,0.48));
+    box-shadow: 0 30px 80px rgba(2, 6, 23, 0.42);
+  }
+  .section-label {
+    @apply text-[10px] font-bold uppercase tracking-[0.28em] text-slate-400 dark:text-slate-500;
   }
 
   /* Status badges — dual theme */
