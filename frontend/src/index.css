@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html       { color-scheme: light; }
+  html.dark  { color-scheme: dark;  }
+  html, body, #root { height: 100%; }
+
+  body {
+    @apply bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-300 antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  /* Smooth theme transition */
+  *, *::before, *::after {
+    transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  /* Scrollbar — Light */
+  * { scrollbar-width: thin; scrollbar-color: #cbd5e1 #f1f5f9; }
+  *::-webkit-scrollbar       { width: 4px; height: 4px; }
+  *::-webkit-scrollbar-track  { @apply bg-slate-100; }
+  *::-webkit-scrollbar-thumb  { @apply bg-slate-300 rounded-full; }
+  *::-webkit-scrollbar-thumb:hover { @apply bg-slate-400; }
+
+  /* Scrollbar — Dark */
+  .dark * { scrollbar-color: #334155 #1e293b; }
+  .dark *::-webkit-scrollbar-track  { @apply bg-slate-800; }
+  .dark *::-webkit-scrollbar-thumb  { @apply bg-slate-600 rounded-full; }
+  .dark *::-webkit-scrollbar-thumb:hover { @apply bg-slate-500; }
+}
+
+@layer components {
+  .col-header {
+    @apply flex-shrink-0 px-4 py-3 border-b
+      border-slate-200 dark:border-slate-700/50
+      bg-slate-100/80 dark:bg-slate-800/40
+      flex items-center gap-2;
+  }
+  .col-header-title {
+    @apply text-[10px] font-bold uppercase tracking-widest
+      text-slate-500 dark:text-slate-400;
+  }
+  .panel {
+    @apply rounded-xl border
+      bg-white dark:bg-slate-800
+      border-slate-200 dark:border-slate-700/50;
+  }
+
+  /* Status badges — dual theme */
+  .badge-critical {
+    @apply px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border
+      text-red-600 dark:text-red-400
+      bg-red-50 dark:bg-red-500/10
+      border-red-200 dark:border-red-500/20;
+  }
+  .badge-warning {
+    @apply px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border
+      text-amber-600 dark:text-amber-400
+      bg-amber-50 dark:bg-amber-500/10
+      border-amber-200 dark:border-amber-500/20;
+  }
+  .badge-stable {
+    @apply px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border
+      text-emerald-600 dark:text-emerald-400
+      bg-emerald-50 dark:bg-emerald-500/10
+      border-emerald-200 dark:border-emerald-500/20;
+  }
+}
