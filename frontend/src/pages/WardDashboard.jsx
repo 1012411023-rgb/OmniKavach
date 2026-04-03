@@ -129,7 +129,7 @@ export default function WardDashboard() {
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="section-label mb-2">Clinical Command Center</p>
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">Global Ward Monitor</h1>
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">ICU Ward Monitor</h1>
             <p className="text-slate-400 dark:text-slate-500 text-xs sm:text-sm mt-1">
               ICU Bay A and B{' '}
               <span className="font-mono text-slate-500 dark:text-slate-400">

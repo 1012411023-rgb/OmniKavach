@@ -10,7 +10,7 @@ export default function NavBar() {
   const { isDark, toggleTheme } = useTheme();
 
   useEffect(() => {
-    const t = setInterval(() => setTime(new Date()), 1000);
+    const t = setInterval(() => setTime(new Date()), 30000);
     return () => clearInterval(t);
   }, []);
 
@@ -89,7 +89,7 @@ export default function NavBar() {
         <div className="hidden sm:flex items-center gap-1.5 text-[11px] font-mono rounded-full px-2.5 py-1 bg-white/60 dark:bg-slate-900/35 border border-white/70 dark:border-slate-700/40">
           <Clock className="w-3 h-3 text-slate-400 dark:text-slate-500" />
           <span className="text-slate-700 dark:text-slate-200 tabular-nums">
-            {time.toLocaleTimeString('en-IN', { hour12: false })}
+            {time.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: false })}
           </span>
           <span className="text-slate-400 dark:text-slate-600">
             {time.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
