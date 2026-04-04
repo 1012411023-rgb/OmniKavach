@@ -10,6 +10,43 @@ In fast-paced ICU environments, patient deterioration is often missed not becaus
 
 ---
 
+## Demo Features
+
+- Doctor/admin sign-in for protected clinical workflows
+- Typed notes, report upload, and clinical photo ingestion
+- AI diagnostic synthesis for clinicians
+- Family Communication mode with plain-language English + Hindi summaries
+- Statistical outlier guardrails that hold diagnosis revision pending redraw
+
+## Demo Run
+
+From the project root:
+
+```powershell
+npm run demo:start
+```
+
+Then open:
+
+```text
+http://127.0.0.1:5173/login
+```
+
+Demo accounts:
+
+```text
+admin@omnikavach.local / Admin@123
+doctor@omnikavach.local / Doctor@123
+```
+
+To stop the demo:
+
+```powershell
+npm run demo:stop
+```
+
+---
+
 ##  Core Architecture (The Agentic Pipeline)
 
 Our system leverages a multi-agent LLM pipeline, with each agent assigned a strictly defined, non-overlapping clinical role:
