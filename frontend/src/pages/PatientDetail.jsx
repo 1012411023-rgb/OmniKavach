@@ -7,9 +7,11 @@ import PatientTimeline from '../components/PatientTimeline';
 import RiskReport from '../components/RiskReport';
 import FamilyCommunication from '../components/FamilyCommunication';
 import OutlierAlert from '../components/OutlierAlert';
+import ShiftHandoff from '../components/ShiftHandoff';
+import AlertTriage from '../components/AlertTriage';
 import {
   ArrowLeft, Cpu, CheckCircle2, Loader2, AlertTriangle, Upload,
-  FileText, TrendingUp, Brain, Heart,
+  FileText, TrendingUp, Brain, Heart, Users, ShieldAlert,
 } from 'lucide-react';
 
 const STATUS_STYLES = {
@@ -186,6 +188,8 @@ export default function PatientDetail() {
           {[
             { key: 'analysis', icon: Brain, label: 'Analysis' },
             { key: 'family', icon: Heart, label: 'Family' },
+            { key: 'handoff', icon: Users, label: 'Handoff' },
+            { key: 'triage', icon: ShieldAlert, label: 'Triage' },
           ].map((tab) => (
             <button
               key={tab.key}
@@ -261,6 +265,20 @@ export default function PatientDetail() {
                 />
               </div>
             </div>
+          </div>
+        ) : activeTab === 'handoff' ? (
+          <div className="h-full min-h-0 overflow-y-auto">
+            <ShiftHandoff
+              patientId={parseInt(id)}
+              patientName={patient?.name}
+            />
+          </div>
+        ) : activeTab === 'triage' ? (
+          <div className="h-full min-h-0 overflow-y-auto">
+            <AlertTriage
+              patientId={parseInt(id)}
+              patientName={patient?.name}
+            />
           </div>
         ) : (
           <div className="h-full min-h-0 overflow-y-auto">

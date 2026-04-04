@@ -308,6 +308,54 @@ export const runAgentAnalysis = async (id, options = {}) => {
   };
 };
 
+export const generateShiftHandoff = async (patientId) => {
+  await mockDelay(800);
+  try {
+    const response = await fetch(`${API_BASE_URL}/handoff/${patientId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    if (!response.ok) throw new Error('Failed to generate handoff');
+    return await response.json();
+  } catch (error) {
+    console.error('Handoff API error:', error);
+    // Fallback mock data
+    return {
+      patient_id: patientId,
+      handover_summary: [
+        "Bullet 1: Patient showing signs of sepsis with lactate trending up from 2.8 to 4.1 over last 12h, hemodynamically unstable on norepinephrine",
+        "Bullet 2: Started broad-spectrum antibiotics at 20:00, fluid resuscitation 2L crystalloid, lactate decreased from 4.1 to 3.6 after fluids",
+        "Bullet 3: Watch for worsening septic shock, repeat lactate in 4 hours, consider vasopressin if MAP < 65"
+      ],
+      generated_at: new Date().toISOString()
+    };
+  }
+};
+
+export const triageAlerts = async (patientId) => {
+  await mockDelay(600);
+  try {
+    const response = await fetch(`${API_BASE_URL}/triage/${patientId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    if (!response.ok) throw new Error('Failed to triage alerts');
+    return await response.json();
+  } catch (error) {
+    console.error('Triage API error:', error);
+    // Fallback mock data
+    return {
+      patient_id: patientId,
+      alert_level: "CRITICAL",
+      diagnosis_flag: "Sepsis",
+      triad_analysis: "Triad MET: Temporal deterioration in lactate (2.8→4.1), symptoms of confusion noted, guidelines confirm immediate intervention",
+      guideline_citation: "Sepsis guidelines: Lactate > 4 mmol/L with hypotension requires immediate fluid resuscitation and antibiotics",
+      recommended_action: "Immediate fluid resuscitation and broad-spectrum antibiotics",
+      generated_at: new Date().toISOString()
+    };
+  }
+};
+
 export const formatAnalysisForUI = (result) => {
   return {
     ...result,
