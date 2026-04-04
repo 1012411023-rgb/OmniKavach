@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Activity, ChevronRight, Wifi, Bell, Shield, Clock, Sun, Moon } from 'lucide-react';
+import { Activity, ChevronRight, Bell, Clock, Sun, Moon, LogOut } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../context/AuthContext';
 
 export default function NavBar() {
   const [time, setTime] = useState(new Date());
   const location = useLocation();
   const isDetail = location.pathname.startsWith('/patient/');
   const { isDark, toggleTheme } = useTheme();
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     const t = setInterval(() => setTime(new Date()), 30000);
@@ -15,84 +17,74 @@ export default function NavBar() {
   }, []);
 
   return (
-    <nav className="glass-panel flex-shrink-0 h-16 rounded-[24px] px-4 sm:px-5 flex items-center justify-between gap-4 z-50 mb-3">
-      {/* Brand + Breadcrumb */}
+    <nav className="flex-shrink-0 h-12 flex items-center justify-between px-5 mb-1">
+      {/* Left: Brand + Breadcrumb */}
       <div className="flex items-center gap-3 min-w-0">
-        <div className="relative">
-          <div className="w-9 h-9 rounded-xl bg-blue-50 dark:bg-cyan-500/15 border border-blue-200 dark:border-cyan-500/30 flex items-center justify-center shadow-sm dark:shadow-none">
-            <Activity className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
+        <Link to="/" className="flex items-center gap-2.5 group">
+          <div className="w-7 h-7 rounded-lg bg-[var(--accent)] flex items-center justify-center">
+            <Activity className="w-3.5 h-3.5 text-white" />
           </div>
-          <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-        </div>
-        <div className="flex items-baseline gap-1.5 min-w-0">
-          <span className="text-slate-900 dark:text-white font-bold text-sm tracking-[0.18em] uppercase">OmniKavach</span>
-          <span className="text-slate-400 dark:text-slate-600 text-[10px] font-mono">v1.0</span>
-        </div>
+          <span className="text-[var(--text-primary)] font-semibold text-sm tracking-tight">
+            OmniKavach
+          </span>
+        </Link>
 
         {isDetail && (
-          <div className="hidden lg:flex items-center gap-1.5 ml-3 text-[11px] text-slate-400 dark:text-slate-500">
+          <div className="hidden sm:flex items-center gap-1 text-[13px] text-[var(--text-tertiary)]">
             <ChevronRight className="w-3 h-3" />
-            <Link to="/" className="hover:text-blue-600 dark:hover:text-cyan-400 transition-colors cursor-pointer">Ward</Link>
+            <Link to="/" className="hover:text-[var(--accent)] transition-colors">Ward</Link>
             <ChevronRight className="w-3 h-3" />
-            <span className="text-slate-600 dark:text-slate-300">Patient Detail</span>
+            <span className="text-[var(--text-secondary)]">Patient</span>
           </div>
         )}
       </div>
 
-      {/* Centre: System status */}
-      <div className="hidden md:flex items-center gap-3 lg:gap-5">
-        <div className="flex items-center gap-1.5 rounded-full px-2.5 py-1 bg-white/60 dark:bg-slate-900/35 border border-white/70 dark:border-slate-700/40">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">6 Agents Online</span>
-        </div>
-        <div className="h-3 w-px bg-slate-200 dark:bg-slate-700" />
-        <div className="flex items-center gap-1.5 rounded-full px-2.5 py-1 bg-white/60 dark:bg-slate-900/35 border border-white/70 dark:border-slate-700/40">
-          <Wifi className="w-3 h-3 text-blue-500 dark:text-cyan-500" />
-          <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">API Connected</span>
-        </div>
-        <div className="h-3 w-px bg-slate-200 dark:bg-slate-700" />
-        <div className="hidden lg:flex items-center gap-1.5 rounded-full px-2.5 py-1 bg-white/60 dark:bg-slate-900/35 border border-white/70 dark:border-slate-700/40">
-          <Shield className="w-3 h-3 text-slate-300 dark:text-slate-600" />
-          <span className="text-[11px] text-slate-400 dark:text-slate-500 font-mono">HIPAA Compliant</span>
-        </div>
-      </div>
-
-      {/* Right: Theme toggle + Alerts + Clock */}
-      <div className="flex items-center gap-3">
+      {/* Right: Controls */}
+      <div className="flex items-center gap-1">
         {/* Theme Toggle */}
         <button
           id="btn-theme-toggle"
           onClick={toggleTheme}
           aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-          className="relative w-14 h-7 rounded-full p-0.5 transition-colors duration-300
-            bg-slate-200 dark:bg-slate-700 border border-slate-300 dark:border-slate-600
-            hover:border-blue-300 dark:hover:border-cyan-500/50"
+          className="w-8 h-8 rounded-full flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)] transition-all"
         >
-          {/* Track icons */}
-          <Sun  className="absolute left-1.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-amber-400 dark:text-slate-600 transition-colors" />
-          <Moon className="absolute right-1.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 dark:text-cyan-400 transition-colors" />
-          {/* Knob */}
-          <div
-            className={`w-6 h-6 rounded-full bg-white dark:bg-slate-800 shadow-md
-              border border-slate-300 dark:border-slate-500
-              transition-transform duration-300 ease-in-out
-              ${isDark ? 'translate-x-7' : 'translate-x-0'}`}
-          />
+          {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
         </button>
 
-        <div className="h-4 w-px bg-slate-200 dark:bg-slate-700" />
-
-        <button className="relative p-1.5 rounded-xl hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-colors">
-          <Bell className="w-4 h-4 text-slate-500 dark:text-slate-400" />
-          <span className="absolute top-0.5 right-0.5 w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" />
+        {/* Notifications */}
+        <button className="relative w-8 h-8 rounded-full flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)] transition-all">
+          <Bell className="w-4 h-4" />
+          <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-[var(--danger)] rounded-full" />
         </button>
-        <div className="hidden sm:flex items-center gap-1.5 text-[11px] font-mono rounded-full px-2.5 py-1 bg-white/60 dark:bg-slate-900/35 border border-white/70 dark:border-slate-700/40">
-          <Clock className="w-3 h-3 text-slate-400 dark:text-slate-500" />
-          <span className="text-slate-700 dark:text-slate-200 tabular-nums">
+
+        {/* Divider */}
+        <div className="w-px h-4 bg-[var(--border)] mx-1" />
+
+        {/* User + Time */}
+        {user && (
+          <div className="hidden md:flex items-center gap-2">
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full">
+              <div className="w-5 h-5 rounded-full bg-[var(--accent-bg)] flex items-center justify-center">
+                <span className="text-[9px] font-bold text-[var(--accent)]">
+                  {user.name.charAt(0)}
+                </span>
+              </div>
+              <span className="text-[12px] text-[var(--text-secondary)] font-medium">{user.name}</span>
+            </div>
+            <button
+              onClick={logout}
+              title="Sign out"
+              className="w-8 h-8 rounded-full flex items-center justify-center text-[var(--text-tertiary)] hover:text-[var(--danger)] hover:bg-[var(--danger-bg)] transition-all"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
+
+        <div className="hidden sm:flex items-center gap-1 text-[12px] font-mono text-[var(--text-tertiary)] ml-1">
+          <Clock className="w-3 h-3" />
+          <span className="tabular-nums">
             {time.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: false })}
-          </span>
-          <span className="text-slate-400 dark:text-slate-600">
-            {time.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
           </span>
         </div>
       </div>
