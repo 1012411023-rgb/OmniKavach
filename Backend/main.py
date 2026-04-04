@@ -1,10 +1,13 @@
 from pathlib import Path
 import asyncio
+import json
 import logging
+import random
+from datetime import datetime, timezone
 
 from fastapi import FastAPI, HTTPException, Request, Path as FastApiPath
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from contextlib import asynccontextmanager
 
 from app import schemas
@@ -151,3 +154,59 @@ async def analyze_patient(patient_id: int = FastApiPath(..., ge=1, le=999999, de
     except Exception as exc:
         logger.error("Analysis engine error for patient %s: %s", patient_id, str(exc), exc_info=True)
         raise HTTPException(status_code=500, detail=f"Analysis engine encountered an error for patient {patient_id}") from exc
+
+# ── Phase 3: Live Data Simulator (Server-Sent Events) ─────────────────────
+
+@app.get("/stream/{patient_id}")
+async def stream_vitals(patient_id: int = FastApiPath(..., ge=1, le=999999)):
+    """
+    Simulate a live ICU bedside monitor via Server-Sent Events.
+
+    Loads the patient's real vital signs from MIMIC CSVs, then replays them
+    one reading every 2 seconds.  If no real data exists, synthetic vitals
+    are generated so the frontend always has something to animate.
+    """
+
+    async def event_generator():
+        # Try loading real vital signs from the optimized CSV pipeline
+        real_vitals = []
+        try:
+            patient_data = get_mimic_patient(patient_id)
+            real_vitals = [
+                {"type": v.type, "value": v.value, "timestamp": v.timestamp.isoformat()}
+                for v in patient_data.vital_signs
+            ]
+        except Exception:
+            logger.warning("No MIMIC vitals for patient %s — using synthetic data", patient_id)
+
+        tick = 0
+        while True:
+            if real_vitals and tick < len(real_vitals):
+                reading = real_vitals[tick]
+            else:
+                # Synthetic fallback: realistic ICU waveform with jitter
+                reading = {
+                    "type": random.choice(["Heart Rate", "MAP"]),
+                    "value": round(
+                        random.gauss(85, 12) if random.random() > 0.5
+                        else random.gauss(72, 8),
+                        1,
+                    ),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                }
+
+            payload = json.dumps({"tick": tick, "patient_id": patient_id, **reading})
+            yield f"data: {payload}\n\n"
+
+            tick += 1
+            await asyncio.sleep(2)
+
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )

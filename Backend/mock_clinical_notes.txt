@@ -1,39 +1,128 @@
-ICU Nursing Shift Note - Patient P-101
-Date: Current Shift
-Time: 04:00
+================================================================================
+PATIENT A — ICU Nursing Shift Note (Sepsis Presentation)
+================================================================================
+Patient ID: P-101 | Date: Current Shift | Time: 04:00
 
 SHIFT ASSESSMENT:
-Patient presents with concerning clinical picture requiring close monitoring. Noted to be lethargic with decreased responsiveness to verbal stimuli. Skin appears clammy and cool to touch, suggesting peripheral perfusion compromise. Respiratory effort increased with noted shortness of breath, rate 22 breaths/min with shallow pattern.
+Patient presents with concerning clinical picture requiring close monitoring. Noted
+to be lethargic with decreased responsiveness to verbal stimuli. Skin appears clammy
+and cool to touch, suggesting peripheral perfusion compromise. Febrile to 38.9°C
+with rigors. Patient appears confused and disoriented to time and place.
 
 VITAL SIGNS:
-- Heart Rate: 115 bpm (elevated)
-- Blood Pressure: 95/60 mmHg (hypotensive)
-- Respiratory Rate: 22/min (elevated)
-- Temperature: 38.4°C (febrile)
-- SpO2: 92% on room air (mild hypoxia)
+- Heart Rate: 118 bpm (tachycardic)
+- Blood Pressure: 88/52 mmHg (hypotensive)
+- Respiratory Rate: 24/min (elevated)
+- Temperature: 38.9°C (febrile)
+- SpO2: 91% on room air
 
 PHYSICAL FINDINGS:
-- General: Lethargic, clammy skin, poor skin turgor
-- Respiratory: Increased work of breathing, shallow breaths
-- Cardiovascular: Tachycardic, hypotensive
-- Neurological: Decreased responsiveness, GCS 12
+- General: Febrile, clammy skin, diaphoretic, poor turgor
+- Neurological: Confused, GCS 12, not oriented to time/place
+- Respiratory: Tachypneic, shallow breathing pattern
+- Cardiovascular: Tachycardic, weak peripheral pulses, capillary refill >3s
 
 CLINICAL CONCERNS:
-1. Sepsis risk elevated - fever + tachycardia + hypotension
-2. Potential tissue hypoperfusion - clammy skin + altered mental status
-3. Respiratory compromise - increased work of breathing
-4. Need for urgent laboratory evaluation and potential sepsis workup
+1. Sepsis likely — fever + tachycardia + hypotension + confusion
+2. Tissue hypoperfusion — clammy skin + altered mental status + delayed cap refill
+3. Respiratory compromise — tachypnea + borderline hypoxia
+4. Possible organ dysfunction — monitor renal output and lactate
 
 RECOMMENDATIONS:
-- STAT lactate, blood cultures, CBC
-- Consider fluid resuscitation protocol
-- Continuous cardiac monitoring
-- Repeat vitals every 15 minutes
-- Prepare for potential ICU transfer
+- STAT lactate, blood cultures x2, CBC, CMP, procalcitonin
+- Initiate Surviving Sepsis Campaign Hour-1 bundle
+- 30 mL/kg crystalloid bolus
+- Broad-spectrum antibiotics within 1 hour
+- Continuous cardiac monitoring, vitals every 15 min
 
 NURSING ACTIONS:
-- Two peripheral IV attempts successful
-- Fluid bolus initiated per protocol
+- Two large-bore peripheral IVs placed
+- Fluid bolus 1L NS initiated
 - Blood cultures drawn prior to antibiotics
-- Lactate level pending
-- Continuous pulse oximetry applied
+- Foley catheter placed — urine output monitoring initiated
+- Continuous pulse oximetry and telemetry applied
+
+================================================================================
+PATIENT B — ICU Nursing Shift Note (Cardiac Presentation)
+================================================================================
+Patient ID: P-102 | Date: Current Shift | Time: 06:30
+
+SHIFT ASSESSMENT:
+Patient reports sudden onset of substernal chest pressure radiating to the left arm
+and jaw. Symptoms began approximately 45 minutes ago while at rest. Patient appears
+anxious and diaphoretic. Denies recent trauma, fever, or cough. Has history of
+hypertension and hyperlipidemia.
+
+VITAL SIGNS:
+- Heart Rate: 102 bpm (mildly elevated)
+- Blood Pressure: 158/94 mmHg (hypertensive)
+- Respiratory Rate: 20/min (normal-high)
+- Temperature: 36.8°C (afebrile)
+- SpO2: 96% on room air
+
+PHYSICAL FINDINGS:
+- General: Anxious, diaphoretic, clutching chest
+- Cardiovascular: Regular rate, no murmur; radiating pain to left arm and jaw
+- Respiratory: Clear bilaterally, no crackles
+- Neurological: Alert and oriented x4, GCS 15
+
+CLINICAL CONCERNS:
+1. Acute Coronary Syndrome — chest pressure + radiation + diaphoresis
+2. Rule out STEMI — obtain 12-lead ECG immediately
+3. Hemodynamic stress — hypertension and mild tachycardia
+4. Risk stratification required — troponin, CK-MB
+
+RECOMMENDATIONS:
+- STAT 12-lead ECG, serial troponins q3h
+- Aspirin 325mg chewed, sublingual nitroglycerin PRN
+- Morphine for refractory pain
+- Cardiology consult, prepare for potential cath lab activation
+- Continuous telemetry, vitals every 10 min
+
+NURSING ACTIONS:
+- 12-lead ECG obtained and sent for read
+- IV access x2 established
+- Aspirin 325mg administered PO
+- NTG 0.4mg SL x1 administered — partial relief reported
+- Troponin I drawn — pending
+
+================================================================================
+PATIENT C — ICU Nursing Shift Note (Stable / Routine Monitoring)
+================================================================================
+Patient ID: P-103 | Date: Current Shift | Time: 08:00
+
+SHIFT ASSESSMENT:
+Patient resting comfortably in bed. No acute complaints. Post-operative day 3
+following elective cholecystectomy. Tolerating clear liquids, ambulating with
+assistance. Surgical site clean, dry, and intact with no signs of infection.
+
+VITAL SIGNS:
+- Heart Rate: 76 bpm (normal)
+- Blood Pressure: 122/78 mmHg (normal)
+- Respiratory Rate: 16/min (normal)
+- Temperature: 36.6°C (afebrile)
+- SpO2: 98% on room air
+
+PHYSICAL FINDINGS:
+- General: Comfortable, well-appearing, good color
+- Cardiovascular: Regular rate and rhythm, strong peripheral pulses
+- Respiratory: Clear to auscultation bilaterally
+- Abdomen: Soft, mild tenderness at surgical site, no distension
+
+CLINICAL CONCERNS:
+1. Routine post-operative monitoring — no acute concerns
+2. DVT prophylaxis compliance — verify SCDs and chemoprophylaxis
+3. Pain management — currently well-controlled on oral analgesics
+
+RECOMMENDATIONS:
+- Advance diet as tolerated
+- Continue DVT prophylaxis per protocol
+- Ambulate 3x daily, incentive spirometry
+- Plan discharge evaluation tomorrow if trajectory continues
+
+NURSING ACTIONS:
+- Morning vitals stable — no changes from overnight
+- Patient ambulated 50 feet with steady gait
+- Oral analgesics administered per schedule — pain 2/10
+- SCDs in place bilaterally
+- Discharge teaching initiated
