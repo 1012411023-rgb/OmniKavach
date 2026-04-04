@@ -72,11 +72,11 @@ _guideline_collection: Optional[chromadb.Collection] = None
 
 def initialize_vector_db() -> bool:
     """
-    Initialize the ChromaDB vector database with sepsis guidelines.
+    Initialize the ChromaDB vector database with ALL .md files in knowledge_base/.
     
-    This function checks if the ./chroma_db directory exists and has data.
-    If not, it reads from knowledge_base/sepsis_guidelines.md, chunks the text,
-    and saves it to a persistent ChromaDB client.
+    Scans the knowledge_base directory for every Markdown file (sepsis, AKI, ARDS, etc.),
+    chunks each document, and stores them in a single unified ChromaDB collection
+    called 'medical_guidelines'.
     
     Returns:
         bool: True if initialization successful, False otherwise
@@ -87,7 +87,6 @@ def initialize_vector_db() -> bool:
         # Set up ChromaDB persistent client
         chroma_path = Path("./chroma_db")
         
-        # Initialize ChromaDB client with persistent storage
         _chroma_client = chromadb.PersistentClient(
             path=str(chroma_path),
             settings=Settings(
@@ -96,74 +95,80 @@ def initialize_vector_db() -> bool:
             )
         )
         
-        # Check if collection already exists
-        try:
-            _guideline_collection = _chroma_client.get_collection("sepsis_guidelines")
-            logger.info("Loaded existing ChromaDB collection 'sepsis_guidelines'")
-            
-            # Verify collection has data
-            count = _guideline_collection.count()
-            if count > 0:
-                logger.info(f"ChromaDB contains {count} guideline chunks")
-                return True
-            else:
-                logger.warning("ChromaDB collection exists but is empty, reinitializing...")
-                
-        except Exception:
-            logger.info("Creating new ChromaDB collection 'sepsis_guidelines'")
-        
-        # Load and process guidelines document
-        guidelines_path = Path(__file__).resolve().parent.parent / "knowledge_base" / "sepsis_guidelines.md"
-        
-        if not guidelines_path.exists():
-            logger.error(f"Guidelines file not found: {guidelines_path}")
+        # Discover all .md files in knowledge_base/
+        kb_dir = Path(__file__).resolve().parent.parent / "knowledge_base"
+        if not kb_dir.exists():
+            logger.error(f"Knowledge base directory not found: {kb_dir}")
             return False
         
-        # Read guidelines text
-        with open(guidelines_path, 'r', encoding='utf-8') as f:
-            guidelines_text = f.read()
+        md_files = sorted(kb_dir.glob("*.md"))
+        if not md_files:
+            logger.error("No .md files found in knowledge_base/")
+            return False
         
-        logger.info(f"Loaded guidelines document ({len(guidelines_text)} characters)")
+        logger.info(f"Discovered {len(md_files)} guideline files: {[f.name for f in md_files]}")
         
-        # Split text into chunks for better retrieval
-        chunks = simple_text_splitter(guidelines_text, chunk_size=500, chunk_overlap=50)
-        logger.info(f"Split guidelines into {len(chunks)} chunks")
-        
-        # Create or recreate collection
+        # Check if collection already has up-to-date data
         try:
-            _chroma_client.delete_collection("sepsis_guidelines")
+            _guideline_collection = _chroma_client.get_collection("medical_guidelines")
+            count = _guideline_collection.count()
+            if count > 0:
+                logger.info(f"Loaded existing ChromaDB collection 'medical_guidelines' ({count} chunks)")
+                return True
+            else:
+                logger.warning("Collection exists but is empty, reinitializing...")
         except Exception:
-            pass  # Collection doesn't exist, that's fine
+            logger.info("Creating new ChromaDB collection 'medical_guidelines'")
+        
+        # Delete stale collections (old name and new name)
+        for old_name in ("sepsis_guidelines", "medical_guidelines"):
+            try:
+                _chroma_client.delete_collection(old_name)
+            except Exception:
+                pass
         
         _guideline_collection = _chroma_client.create_collection(
-            name="sepsis_guidelines",
-            metadata={"description": "Sepsis clinical guidelines for RAG"}
+            name="medical_guidelines",
+            metadata={"description": "Unified medical guidelines for RAG (sepsis, AKI, ARDS, etc.)"}
         )
         
-        # Add chunks to ChromaDB
+        # Process each .md file
         documents = []
         metadatas = []
         ids = []
+        global_chunk_idx = 0
         
-        for i, chunk in enumerate(chunks):
-            if chunk.strip():  # Skip empty chunks
-                documents.append(chunk)
-                metadatas.append({
-                    "chunk_id": i,
-                    "source": "sepsis_guidelines.md",
-                    "length": len(chunk)
-                })
-                ids.append(f"guideline_chunk_{i}")
+        for md_file in md_files:
+            try:
+                text = md_file.read_text(encoding="utf-8")
+                if not text.strip():
+                    logger.warning(f"Skipping empty file: {md_file.name}")
+                    continue
+                
+                chunks = simple_text_splitter(text, chunk_size=500, chunk_overlap=50)
+                logger.info(f"  {md_file.name}: {len(text)} chars → {len(chunks)} chunks")
+                
+                for chunk in chunks:
+                    if chunk.strip():
+                        documents.append(chunk)
+                        metadatas.append({
+                            "chunk_id": global_chunk_idx,
+                            "source": md_file.name,
+                            "length": len(chunk)
+                        })
+                        ids.append(f"guideline_chunk_{global_chunk_idx}")
+                        global_chunk_idx += 1
+            except Exception as file_exc:
+                logger.error(f"Failed to process {md_file.name}: {file_exc}")
+                continue
         
         if documents:
-            # Add documents to collection
             _guideline_collection.add(
                 documents=documents,
                 metadatas=metadatas,
                 ids=ids
             )
-            
-            logger.info(f"Successfully added {len(documents)} guideline chunks to ChromaDB")
+            logger.info(f"Successfully embedded {len(documents)} chunks from {len(md_files)} guideline files into ChromaDB")
             return True
         else:
             logger.error("No valid document chunks to add to ChromaDB")
@@ -258,7 +263,7 @@ def get_db_status() -> dict:
         count = _guideline_collection.count()
         return {
             "initialized": True,
-            "collection": "sepsis_guidelines",
+            "collection": "medical_guidelines",
             "document_count": count,
             "status": "healthy" if count > 0 else "empty"
         }

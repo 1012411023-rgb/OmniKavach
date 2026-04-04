@@ -9,6 +9,10 @@ import pandas as pd
 from app.exceptions import ClinicalDataIncompleteError
 from app import schemas
 
+# ── Production CSV Whitelist (RAM optimization) ──────────────────────────
+# Only these 4 files are loaded. All other MIMIC CSVs are ignored.
+ALLOWED_CSV_STEMS = frozenset({"CHARTEVENTS", "LABEVENTS", "PATIENTS", "D_ITEMS"})
+
 
 def _get_dataset_dir() -> Path:
     """Get and validate the MIMIC dataset directory path."""
@@ -83,7 +87,15 @@ def _sanitize_string(value, max_length: int = 1000, context: str = "data") -> st
 
 
 def _resolve_dataset_file(stem: str) -> Path:
-    """Resolve either compressed or uncompressed CSV file for a MIMIC table."""
+    """Resolve either compressed or uncompressed CSV file for a MIMIC table.
+    
+    Only files in ALLOWED_CSV_STEMS are permitted to keep the RAM footprint minimal.
+    """
+    if stem not in ALLOWED_CSV_STEMS:
+        raise ClinicalDataIncompleteError(
+            f"CSV '{stem}' is not in the production whitelist. "
+            f"Allowed: {', '.join(sorted(ALLOWED_CSV_STEMS))}"
+        )
     gz = DATASET_DIR / f"{stem}.csv.gz"
     plain = DATASET_DIR / f"{stem}.csv"
     if gz.exists():
@@ -145,16 +157,20 @@ def get_available_subject_ids(limit: Optional[int] = None) -> List[int]:
 
 
 def get_mimic_patient(subject_id: int) -> schemas.PatientData:
-    """Load a patient's labs, vitals, and notes from MIMIC demo CSVs."""
+    """Load a patient's labs, vitals, and notes from MIMIC demo CSVs.
+    
+    Production-optimized: only reads CHARTEVENTS, LABEVENTS, PATIENTS, D_ITEMS.
+    Clinical notes come from mock_clinical_notes.txt via the Parser Agent.
+    """
     labevents_file = _resolve_dataset_file("LABEVENTS")
     chartevents_file = _resolve_dataset_file("CHARTEVENTS")
-    noteevents_file = _resolve_dataset_file("NOTEEVENTS")
 
-    d_labitems_file = _resolve_dataset_file("D_LABITEMS")
+    # D_ITEMS serves as the unified label dictionary for both labs and chart events
     d_items_file = _resolve_dataset_file("D_ITEMS")
 
-    lab_label_map = _read_label_map(d_labitems_file)
-    chart_label_map = _read_label_map(d_items_file)
+    label_map = _read_label_map(d_items_file)
+    lab_label_map = label_map   # reuse the same map
+    chart_label_map = label_map
 
     lab_results: List[schemas.LabResult] = []
     for rows in _subject_chunks(
@@ -226,22 +242,9 @@ def get_mimic_patient(subject_id: int) -> schemas.PatientData:
                 )
             )
 
+    # Clinical notes are NOT loaded from NOTEEVENTS.csv (not in whitelist).
+    # The Parser Agent reads from mock_clinical_notes.txt instead.
     clinical_notes: List[schemas.ClinicalNote] = []
-    for rows in _subject_chunks(
-        noteevents_file,
-        subject_id,
-        usecols=["subject_id", "row_id", "text", "category"],
-        chunksize=20000,
-    ):
-        rows = rows.dropna(subset=["text"])
-        for _, row in rows.iterrows():
-            clinical_notes.append(
-                schemas.ClinicalNote(
-                    note_id=str(row.get("row_id", "unknown")),
-                    text_content=str(row["text"]),
-                    category=str(row.get("category") or "General"),
-                )
-            )
 
     return schemas.PatientData(
         lab_results=lab_results,
