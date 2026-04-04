@@ -482,3 +482,10 @@ timestamp
 2026-04-04 09:53:45,006 | INFO | app.rag | Loaded existing ChromaDB collection 'medical_guidelines' (24 chunks)
 2026-04-04 09:53:45,007 | INFO | main | ✅ ChromaDB initialized successfully: {'initialized': True, 'collection': 'medical_guidelines', 'document_count': 24, 'status': 'healthy'}
 2026-04-04 09:53:45,007 | INFO | main | 🏥 OmniKavach Backend ready for ICU sepsis detection
+2026-04-04 10:22:43,035 | INFO | main | 🚀 Starting OmniKavach Backend Server...
+2026-04-04 10:22:43,036 | INFO | main | 📚 Initializing Medical Librarian (ChromaDB)...
+2026-04-04 10:22:43,570 | INFO | app.rag | Discovered 3 guideline files: ['aki_guidelines.md', 'ards_guidelines.md', 'sepsis_guidelines.md']
+2026-04-04 10:22:43,625 | INFO | app.rag | Loaded existing ChromaDB collection 'medical_guidelines' (24 chunks)
+2026-04-04 10:22:43,626 | INFO | main | ✅ ChromaDB initialized successfully: {'initialized': True, 'collection': 'medical_guidelines', 'document_count': 24, 'status': 'healthy'}
+2026-04-04 10:22:43,627 | INFO | main | 🏥 OmniKavach Backend ready for ICU sepsis detection
+2026-04-04 10:30:14,327 | INFO | main | 🛑 Shutting down OmniKavach Backend...

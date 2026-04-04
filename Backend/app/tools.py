@@ -78,6 +78,106 @@ def detect_lab_outlier(current_value: float, historical_values: List[float]) -> 
     return {"is_outlier": False}
 
 
+def detect_baseline_contradiction(
+    current_value: float,
+    historical_values: List[float],
+    timestamps: List[str] = None,
+    lab_name: str = "Lab Value",
+    unit: str = "",
+) -> Dict[str, Any]:
+    """
+    Advanced outlier detection that returns full baseline contradiction data
+    for the Chief Synthesis Agent to evaluate.
+    
+    If the new value exceeds 2.5 SD from the historical mean, the function
+    returns a structured report that instructs the Chief Agent to:
+      1. REFUSE to incorporate the value into any risk assessment.
+      2. FLAG the value as a probable mislabeled result or sensor error.
+      3. BLOCK diagnosis revision until a confirmed redraw is received.
+    
+    Args:
+        current_value: The newly arrived lab value
+        historical_values: List of prior values (minimum 3 days of data recommended)
+        timestamps: Optional parallel list of ISO timestamp strings
+        lab_name: Human-readable lab test name (e.g. "Lactate")
+        unit: Measurement unit (e.g. "mmol/L")
+    
+    Returns:
+        Dict with is_outlier, severity, baseline statistics, z_score,
+        verdict, and chief_agent_directive.
+    """
+    if not historical_values or len(historical_values) < 2:
+        return {"is_outlier": False, "reason": "Insufficient historical data"}
+
+    clean = [float(v) for v in historical_values
+             if v is not None and np.isfinite(v)]
+    if len(clean) < 2:
+        return {"is_outlier": False, "reason": "Insufficient clean historical data"}
+
+    hist_mean = float(np.mean(clean))
+    hist_std = float(np.std(clean))
+
+    # Guard: identical historical values
+    if hist_std == 0:
+        hist_std = 0.01  # avoid division by zero; any deviation is huge
+
+    z_score = abs(current_value - hist_mean) / hist_std
+    threshold = 2.5
+
+    baseline_summary = {
+        "label": f"{lab_name} (72h Baseline)",
+        "mean": round(hist_mean, 2),
+        "stdDev": round(hist_std, 2),
+        "values": [
+            {
+                "time": timestamps[i] if timestamps and i < len(timestamps) else f"T+{i}",
+                "value": round(v, 2),
+                "unit": unit,
+            }
+            for i, v in enumerate(clean)
+        ],
+    }
+
+    if z_score <= threshold:
+        return {
+            "is_outlier": False,
+            "z_score": round(z_score, 2),
+            "baseline": baseline_summary,
+        }
+
+    # ── OUTLIER CONFIRMED ──
+    severity = "critical" if z_score > 5.0 else "warning"
+    verdict = (
+        f"REJECTED — exceeds 2.5 SD threshold by "
+        f"{round(z_score - threshold, 1)}σ"
+    )
+
+    return {
+        "is_outlier": True,
+        "severity": severity,
+        "z_score": round(z_score, 2),
+        "baseline": baseline_summary,
+        "problematic_value": {
+            "value": current_value,
+            "unit": unit,
+            "z_score": round(z_score, 2),
+            "verdict": verdict,
+        },
+        "reason": (
+            f"PROBABLE MISLABELED RESULT: {lab_name} {current_value} {unit} "
+            f"contradicts baseline (mean {hist_mean:.2f} ± {hist_std:.2f} {unit}) "
+            f"by {z_score:.1f}σ."
+        ),
+        "chief_agent_directive": (
+            "REFUSE to incorporate this value into the risk assessment. "
+            "The current diagnosis must remain unchanged based on the last "
+            "verified dataset. A confirmed lab redraw is REQUIRED before "
+            "any diagnostic revision may proceed."
+        ),
+        "diagnosis_blocked": True,
+    }
+
+
 def calculate_trend(values: List[float]) -> str:
     """
     Calculate the simple trend of the last 5 lab values.
